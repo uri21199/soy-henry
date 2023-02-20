@@ -16,7 +16,7 @@ def Ret_Pregunta01():
     '''
     #Tu código aca:
 
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("datasets/Fuentes_Consumo_Energia.csv")
     
     colombia= df[df['Entity'].isin(['Colombia'])].shape
     mexico= df[df['Entity'].isin(['Mexico'])].shape
@@ -32,7 +32,7 @@ def Ret_Pregunta02():
     '''
     #Tu código aca:
 
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("./datasets/Fuentes_Consumo_Energia.csv")
 
     df.drop(["Code"], axis="columns", inplace= True)
     df.drop(["Entity"], axis="columns", inplace= True)
@@ -47,7 +47,7 @@ def Ret_Pregunta03():
     Esta función debe informar la cantidad de registros de la columna Year sin tener en cuenta aquellos con valores faltantes
     retornando ese valor en un dato de tipo entero.
     '''
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("./datasets/Fuentes_Consumo_Energia.csv")
     
 
     return df['Year'].dropna().shape[0]
@@ -68,7 +68,7 @@ def Ret_Pregunta04():
     redondeado a 2 decimales, retornando ese valor en un dato de tipo float.
     '''
     #Tu código aca:
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("./datasets/Fuentes_Consumo_Energia.csv")
 
     df['Consumo_Total'] = (df.Coal_Consumption_EJ*277.778 + 
                           df.Gas_Consumption_EJ*277.778 +
@@ -89,7 +89,7 @@ def Ret_Pregunta05():
     para la entidad 'Europe' retornando ese valor en un dato de tipo entero.
     '''
     #Tu código aca:
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("./datasets/Fuentes_Consumo_Energia.csv")
 
     mask = df["Entity"] == "Europe"
 
@@ -120,6 +120,7 @@ def Ret_Pregunta06(m1, m2, m3):
             return True
 
     return False
+    
 def Ret_Pregunta07():
     '''
     Debes utilizar Pandas para ingestar en un objeto Dataframe el contenido del archivo provisto
@@ -136,7 +137,7 @@ def Ret_Pregunta07():
     Debe retornar el valor en un dato de tipo string.
     '''
     #Tu código aca:
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("./datasets/Fuentes_Consumo_Energia.csv")
 
     pais = ["Argentina","Brazil","Chile","Colombia","Ecuador","Mexico","Peru"]
 
@@ -156,7 +157,7 @@ def Ret_Pregunta08():
     retornando ese valor en un dato de tipo entero.
     '''
     #Tu código aca:
-    df = pd.read_csv("datasets\Fuentes_Consumo_Energia.csv")
+    df = pd.read_csv("./datasets/Fuentes_Consumo_Energia.csv")
 
     return df["Entity"].nunique()
 
@@ -168,7 +169,7 @@ def Ret_Pregunta09():
     '''
     #Tu código aca:
     
-    df_ejercicio1 = pd.read_csv('./datasets/Tabla1_ejercicio.csv', sep=';')
+    df_ejercicio1 = pd.read_csv("./datasets/Tabla1_ejercicio.csv", sep=';')
     df_ejercicio2 = pd.read_csv('./datasets/Tabla2_ejercicio.csv', sep=';')
     df_final = pd.merge(df_ejercicio1,df_ejercicio2,on="pers_id").drop_duplicates()
     
