@@ -106,3 +106,62 @@ from venta
 group by IdEmpleado
 order by total desc
 limit 1;
+
+#¿Cuál es el producto con mayor venta en la sucursal 7 en el año 2019?
+
+select count(v.cantidad) as total, v.IdSucursal, v.IdProducto, p.Concepto
+from venta v
+join producto p on v.IdProducto = p.IDProducto
+where IdSucursal = 7 and year(Fecha) = 2019
+group by IdProducto
+order by total DESC
+limit 1;
+
+#¿Cuál es la cantidad total de productos vendidos por cada sucursal en el mes de agosto de 2018?
+
+
+
+select count(cantidad) as cantidad, IdSucursal
+from venta
+where date_format(Fecha, '%Y') = 2018
+group by IdSucursal 
+order by IdSucursal;
+
+#¿Cuál es el promedio de ventas por día en la sucursal 3 durante el mes de mayo de 2018?
+select avg(cantidad) as promedio, IdSucursal
+from venta
+where month(Fecha) = 05 and year(Fecha) = 2018
+group by IdSucursal 
+order by IdSucursal;
+
+#¿Cuál es el producto con menor venta en la sucursal 5 en el año 2017?
+
+SELECT p.Concepto, MIN(v.Cantidad) AS VentaMinima
+FROM venta v
+JOIN producto p ON v.IdProducto = p.IDProducto
+WHERE v.IdSucursal = 5 AND YEAR(v.Fecha) = 2017
+GROUP BY p.Concepto
+ORDER BY VentaMinima ASC
+LIMIT 1;
+
+#¿Cuál es el año con mayor cantidad de productos vendidos en la sucursal 12?
+select year(Fecha) as anio, count(*) as total
+from venta
+where IdSucursal = 12
+group by anio
+order by total desc
+limit 1;
+
+#¿Cuál es el promedio de ventas por día en todas las sucursales durante el mes de enero de 2018?
+select avg(Cantidad) as promedio, IdSucursal
+from venta
+where year(Fecha) = 2018 and month(Fecha) = 01
+group by IdSucursal
+order by IdSucursal;
+
+SELECT AVG(total/dias) as promedio_ventas_dia
+FROM (
+  SELECT SUM(Cantidad) as total, COUNT(DISTINCT DATE(Fecha)) as dias
+  FROM venta
+  WHERE Fecha BETWEEN '2018-01-01' AND '2018-01-31'
+) t; #Ejemplo de ChatGPT
