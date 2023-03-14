@@ -307,16 +307,18 @@ VALUES (161,'41944781','Stephanie','Hurst','1986-11-23','2022-02-14',1243),
 
 select * from cohorte;
 
-/* Traer la información de las columnas de tal tabla */
+/* Traer la información de las columnas de tal tabla 
 SELECT column_name, data_type, character_maximum_length, is_nullable 
 FROM information_schema.columns
 WHERE table_name = 'cohorte';
+*/
 
 
-/*Traer la informacion de las tablas*/
+/*Traer la informacion de las tablas
 SELECT table_name
 FROM information_schema.TABLES
 WHERE table_schema = 'henry' AND table_type = 'BASE TABLE';
+*/
 
 /*Usando el WHERE creamos condiciones. En este caso traemos el id, nombre y apellido de alumnos de la cohorte 1235*/
 SELECT idAlumno, nombre, apellido
