@@ -38,8 +38,8 @@ Para analizar mejoras en el servicio, la dirección desea saber: cuál es el añ
 (Fecha = Fecha de venta; Fecha_Entrega = Fecha de entrega)
 Pista: acordate de las funciones de agregacion AVG/SUM/MIN/MAX
 */
-
-select avg(Fecha_Entrega - Fecha) as tiempo_transcurrido, date_format(Fecha, '%Y') as año
+use checkpoint_m2;
+select avg(datediff(Fecha_Entrega, Fecha)) as tiempo_transcurrido, date_format(Fecha, '%Y') as año
 from venta
 group by año
 order by año desc

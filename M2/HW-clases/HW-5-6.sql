@@ -307,34 +307,21 @@ VALUES (161,'41944781','Stephanie','Hurst','1986-11-23','2022-02-14',1243),
 
 select * from cohorte;
 
-/* Traer la información de las columnas de tal tabla 
+/* Traer la información de las columnas de tal tabla */
 SELECT column_name, data_type, character_maximum_length, is_nullable 
 FROM information_schema.columns
 WHERE table_name = 'cohorte';
-*/
 
 
-/*Traer la informacion de las tablas
+/*Traer la informacion de las tablas*/
 SELECT table_name
 FROM information_schema.TABLES
 WHERE table_schema = 'henry' AND table_type = 'BASE TABLE';
-*/
 
 /*Usando el WHERE creamos condiciones. En este caso traemos el id, nombre y apellido de alumnos de la cohorte 1235*/
 SELECT idAlumno, nombre, apellido
 FROM alumno
 WHERE idCohorte = 1235;
-
-/*Al intentar eliminar puede surgir un error*/
-DELETE FROM alumno WHERE nombre = "Candice";
-
-/*Con esto logro autorizar la actualización de la tabla*/
-SET SQL_SAFE_UPDATES = 0;
-/*Luego de realizar el cambio vuelva a colocar 1 ya que puede generar grandes perdidas*/
-SET SQL_SAFE_UPDATES = 1;
-
-/*Actualizar datos */
-UPDATE alumno SET apellido = "Roman" WHERE nombre = "Beverly";/*
 
 /*Ejemplo de suma, promedio, max, min, count pero en este caso no sirve de nada por la tabla cohorte*/
 select sum(idCohorte) as Suma from cohorte;
@@ -386,7 +373,7 @@ alter table alumno add check (idCohorte < 3000); #La cohorte siempre menor a 300
 /*HOMEWORK 6*/
 /*No se sabe con certeza el lanzamiento de las cohortes N° 1245 y N° 1246, se solicita que las elimine de la tabla.*/
 select * from cohorte where idCohorte in (1245, 1246);
-delete * from cohorte where idCohorte in (1245, 1246);
+delete from cohorte where idCohorte in (1245, 1246);
 
 /*Se ha decidido retrasar el comienzo de la cohorte N°1243, por lo que la nueva fecha de inicio será el 16/05. 
 Se le solicita modificar la fecha de inicio de esos alumnos.*/
@@ -417,3 +404,98 @@ where idCohorte = 1235;
 select * 
 from alumno
 where idCohorte = 1235 and year(fechaIngreso) = 2019;
+
+/*¿Cuantas carreas tiene Henry?*/
+use henry;
+select count(*) as cantidad from carrera;
+
+/*¿Cuantos alumnos hay en total?*/
+select count(*) as cantidadAlumnos from alumno;
+
+/*¿Cuantos alumnos tiene cada cohorte?*/
+select count(*) as cantidad, IdCohorte
+from alumno 
+group by IdCohorte;
+
+/*Confecciona un listado de los alumnos ordenado por los últimos alumnos que ingresaron, con nombre y apellido en un solo campo.*/
+select * from alumno;
+select concat(nombre, ' ', apellido) as nombreCompleto, fechaIngreso
+from alumno
+order by fechaIngreso desc;
+
+/*¿Cual es el nombre del primer alumno que ingreso a Henry? ¿En que fecha ingreso?*/
+select nombre, apellido, fechaIngreso
+from alumno
+order by fechaIngreso
+limit 1;
+
+/*¿Cual es el nombre del ultimo alumno que ingreso a Henry?*/
+select nombre, apellido, fechaIngreso
+from alumno
+order by fechaIngreso desc
+limit 1;
+
+/*La función YEAR le permite extraer el año de un campo date, utilice esta función y especifique cuantos alumnos ingresaron a a Henry por año.*/
+select year(fechaIngreso) as anio, count(*) as cantidad
+from alumno
+group by anio;
+
+/*¿Cuantos alumnos ingresaron por semana a henry?, indique también el año. WEEKOFYEAR()*/
+select weekofyear(fechaIngreso) as semana, count(*) as cantidad, year(fechaIngreso) as anio
+from alumno
+group by semana, anio
+order by anio, semana;
+
+use henry;
+select * from alumno;
+select year(fechaIngreso) as anioIngreso, weekofyear(fechaIngreso) as semanaIngreso, count(IdAlumno)
+from alumno
+group by semanaIngreso
+order by year(fechaIngreso) desc, weekofyear(fechaIngreso) asc;
+
+/*¿En que años ingresaron más de 20 alumnos?*/
+select year(fechaIngreso) as anio, count(*) as cantidad
+from alumno
+group by anio
+having cantidad > 20;
+
+/*Investigue las funciones TIMESTAMPDIFF() y CURDATE(). ¿Podría utilizarlas para saber cual es la edad de los instructores?. 
+¿Como podrías verificar si la función cálcula años completos? Utiliza DATE_ADD().*/
+select * from instructor;
+select nombre, apellido, timestampdiff(year, fechaNacimiento, curdate()) as edad
+from instructor
+order by apellido;
+
+/*La edad de cada alumno.*/
+select nombre, apellido, timestampdiff(year, fechaNacimiento, curdate()) as edad
+from alumno;
+
+/*La edad promedio de los alumnos de henry.*/
+select * from alumno;
+select avg(timestampdiff(year, fechaNacimiento, curdate())) as promedio
+from alumno;
+
+/*La edad promedio de los alumnos de cada cohorte.*/
+select avg(timestampdiff(year, fechaNacimiento, curdate())) as promedio, IdCohorte
+from alumno
+group by IdCohorte;
+
+/*Elabora un listado de los alumnos que superan la edad promedio de Henry.*/
+select nombre, apellido, timestampdiff(year, fechaNacimiento, curdate()) as Edad
+from alumno
+where timestampdiff(year, FechaNacimiento, curdate()) > 
+      (select avg(timestampdiff(year, FechaNacimiento, curdate())) from Alumno);
+
+/*Seleccionar sólo los alumnos que se ingresaron después de cierta fecha.*/
+select * 
+from alumno
+where fechaIngreso > '2022-02-01';
+
+/*Ordenar los alumnos por fecha de nacimiento de forma descendente.*/
+select * 
+from alumno
+order by fechaNacimiento desc;
+
+/*Agregar una columna al DataFrame que contenga la edad de cada alumno en años. Encontrar el promedio de edad de los alumnos.*/
+alter table alumno add column edad int;
+update alumno set edad = datediff(curdate(), fechaNacimiento) / 365;
