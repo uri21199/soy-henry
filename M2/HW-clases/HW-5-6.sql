@@ -428,7 +428,7 @@ select nombre, apellido, fechaIngreso
 from alumno
 order by fechaIngreso
 limit 1;
-
+use henry;
 /*¿Cual es el nombre del ultimo alumno que ingreso a Henry?*/
 select nombre, apellido, fechaIngreso
 from alumno
@@ -438,20 +438,14 @@ limit 1;
 /*La función YEAR le permite extraer el año de un campo date, utilice esta función y especifique cuantos alumnos ingresaron a a Henry por año.*/
 select year(fechaIngreso) as anio, count(*) as cantidad
 from alumno
-group by anio;
+group by anio
+order by anio;
 
 /*¿Cuantos alumnos ingresaron por semana a henry?, indique también el año. WEEKOFYEAR()*/
 select weekofyear(fechaIngreso) as semana, count(*) as cantidad, year(fechaIngreso) as anio
 from alumno
 group by semana, anio
 order by anio, semana;
-
-use henry;
-select * from alumno;
-select year(fechaIngreso) as anioIngreso, weekofyear(fechaIngreso) as semanaIngreso, count(IdAlumno)
-from alumno
-group by semanaIngreso
-order by year(fechaIngreso) desc, weekofyear(fechaIngreso) asc;
 
 /*¿En que años ingresaron más de 20 alumnos?*/
 select year(fechaIngreso) as anio, count(*) as cantidad
@@ -483,8 +477,7 @@ group by IdCohorte;
 /*Elabora un listado de los alumnos que superan la edad promedio de Henry.*/
 select nombre, apellido, timestampdiff(year, fechaNacimiento, curdate()) as Edad
 from alumno
-where timestampdiff(year, FechaNacimiento, curdate()) > 
-      (select avg(timestampdiff(year, FechaNacimiento, curdate())) from Alumno);
+where timestampdiff(year, FechaNacimiento, curdate()) > (select avg(timestampdiff(year, FechaNacimiento, curdate())) from Alumno);
 
 /*Seleccionar sólo los alumnos que se ingresaron después de cierta fecha.*/
 select * 
@@ -498,4 +491,32 @@ order by fechaNacimiento desc;
 
 /*Agregar una columna al DataFrame que contenga la edad de cada alumno en años. Encontrar el promedio de edad de los alumnos.*/
 alter table alumno add column edad int;
+/*Con esto logro autorizar la actualización de la tabla*/
+SET SQL_SAFE_UPDATES = 0;
 update alumno set edad = datediff(curdate(), fechaNacimiento) / 365;
+/*Luego de realizar el cambio vuelva a colocar 1 ya que puede generar grandes perdidas*/
+SET SQL_SAFE_UPDATES = 1;
+select * from alumno;
+
+select avg(edad) as promedio
+from alumno;
+
+/*Encontrar la cantidad de alumnos por cohorte.*/
+select count(*) as cantidad, IdCohorte
+from alumno
+group by IdCohorte;
+
+/*Seleccionar sólo los alumnos cuya cédula de identidad comienza con un cierto prefijo.*/
+select *
+from alumno
+where cedulaIdentidad like "20%";
+
+/*Encontrar la fecha de ingreso más temprana y más tardía de los alumnos.*/
+select min(FechaIngreso) as fecha_minima, max(FechaIngreso) as fecha_maxima
+from alumno;
+
+/*Seleccionar sólo los alumnos que tengan una edad entre dos valores dados.*/
+select *
+from alumno
+where edad < 20 and edad > 18;
+
